@@ -23,10 +23,14 @@ db.on('connected',()=>{
 
 // write code Here 
 
+app.get('/all',(req,res)=>{
+  res.json('get all')
+})
 
-
-
+app.post('/create',(req,res)=>{
+  res.json('created new user sucssfuly')
+})
 // end
 app.listen(3000 ,()=>{
-  console.log('Server on...');
+  console.log('Server on');
 });
