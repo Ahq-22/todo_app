@@ -24,12 +24,45 @@ db.on('connected',()=>{
 // write code Here 
 
 app.get('/all',(req,res)=>{
-  res.json('get all')
+  User.find({},(err,data)=>{
+    if(err){
+      console.log('ERR :',err);
+    }else{
+      res.json(data)
+    }
+  })
 })
 
-app.post('/create',(req,res)=>{
-  res.json('created new user sucssfuly')
+app.post('/create/:title/:completed',(req,res)=>{
+  User.create({title:req.params.title,isCompleted:req.params.completed},(err)=>{
+    if(err){
+      console.log('ERR:',err)
+    }else{
+      res.json('created new user sucssfuly')
+    }
+  })
 })
+  
+app.delete('/delete/:id',(req,res)=>{
+  User.findByIdAndDelete({_id : req.params.id},(err)=>{
+    if(err){
+      console.log(err)
+    }else{
+      res.json('delete one')
+    }
+  })
+})
+
+app.put('/ubdete/:id' , (req,res)=>{
+  User.findByIdAndUpdate({_id:req.params.id},{$set:{isCompleted:true}},(err)=>{
+    if(err){
+      console.log('ERR:',err)
+    }else{
+      res.json('complet Task')
+    }
+  })
+})
+
 // end
 app.listen(3000 ,()=>{
   console.log('Server on');
