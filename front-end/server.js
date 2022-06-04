@@ -1,9 +1,11 @@
 var mongoose = require('mongoose');
+var cors = require('cors');
 //                                  DataName
 var mongoDB = 'mongodb://127.0.0.1/todo';
 const express = require('express');
 const app = express()
 app.use(express.json())
+app.use(cors());
 //                           modelName
 const User = require('./model/users');
 
@@ -33,28 +35,30 @@ app.get('/all',(req,res)=>{
   })
 })
 
-app.post('/create/:title/:completed',(req,res)=>{
-  User.create({title:req.params.title,isCompleted:req.params.completed},(err)=>{
+app.post('/create',(req,res)=>{
+  User.create({title:req.body.title ,isCompleted: false},(err)=>{
     if(err){
       console.log('ERR:',err)
     }else{
-      res.json('created new user sucssfuly')
-    }
-  })
-})
-  
-app.delete('/delete/:id',(req,res)=>{
-  User.findByIdAndDelete({_id : req.params.id},(err)=>{
-    if(err){
-      console.log(err)
-    }else{
-      res.json('delete one')
+      res.json(req.body.title)
     }
   })
 })
 
-app.put('/ubdete/:id' , (req,res)=>{
-  User.findByIdAndUpdate({_id:req.params.id},{$set:{isCompleted:true}},(err)=>{
+  
+app.delete('/delete/:id',(req,res)=>{
+  User.deleteOne({title : req.params.id},(err)=>{
+    if(err){ 
+      console.log(err)
+    }else{
+      res.json('deleteOne')
+    }
+  })
+})
+
+
+app.put('/ubdete/:id/:result' , (req,res)=>{
+  User.updateOne({title:req.params.id},{$set:{isCompleted:req.params.result}},(err)=>{
     if(err){
       console.log('ERR:',err)
     }else{
@@ -64,6 +68,6 @@ app.put('/ubdete/:id' , (req,res)=>{
 })
 
 // end
-app.listen(3000 ,()=>{
+app.listen(4000 ,()=>{
   console.log('Server on');
 });
